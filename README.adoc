@@ -1,0 +1,16 @@
+== DrohnFH BMI088 Breakout Board
+
+Footprint: DIP-16
+
+image::docs/bmi088_breakout.png[]
+
+=== Acknowledgement
+
+This work was supported by the City of Vienna via the project 
+_Stadt Wien Kompetenzteam für Drohnentechnik in der Fachhochschulausbildung_,
+MA23 Projekt Nr. 35-02.
+
+[grid="none",frame="none"]
+|====
+| image:docs/drohnfh_logo_80.png[] | image:docs/ma23_80.png[] | image:docs/fhtw_80.png[]
+|====
