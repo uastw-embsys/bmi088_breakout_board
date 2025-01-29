@@ -1,0 +1,69 @@
+\documentclass{standalone}
+\usepackage{circuitikz}
+\usepackage[scaled]{helvet}
+\usepackage[T1]{fontenc}
+\renewcommand\familydefault{\sfdefault}
+
+
+\begin{document}
+
+\begin{circuitikz}
+    
+\draw (0,0) node[dipchip,
+    num pins=16,
+    external pins width=0.6,
+    scale = 2,
+    external pad fraction=4,
+    align=center ](C){\footnotesize BMI088\\ \footnotesize Break \\\footnotesize Out};
+    
+\draw[-latex] (C.pin 1) -- ++(-5,0) node[inner sep=0](SDO1){} -- ++(-1,0) node[anchor=east] {MISO};
+\node [left,anchor=east] at (C.bpin 1) {SDO1};
+
+\draw[latex-] (C.pin 2) -- ++(-1,0) node[anchor=east] {CSB\_ACCEL};
+\node [left,anchor=east] at (C.bpin 2) {CSB1};
+
+\draw[-latex] (C.pin 3) -- ++(-1,0) node[anchor=east] {INT4\_GYRO};
+\node [left,anchor=east] at (C.bpin 3) {INT4};
+
+\draw[-latex] (C.pin 4) -- ++(-1,0) node[anchor=east] {INT3\_GYRO};
+\node [left,anchor=east] at (C.bpin 4) {INT3};
+
+\draw[latex-] (C.pin 5) -- ++(-4,0) -- ++(0,1) -- ++(-0.25,0) -- ++(0.5,0) node[pos=0.5,anchor=south]{VDDIO};
+\node [left,anchor=east] at (C.bpin 5) {VDDIO};
+
+\draw(C.pin 6) -| (SDO1) to[short,-*] (SDO1);
+\node [left,anchor=east] at (C.bpin 6) {SDO2};
+
+\draw[-latex] (C.pin 7) -- ++(-1,0) node[anchor=east] {MOSI};
+\node [left,anchor=east] at (C.bpin 7) {SDA/SDI};
+
+\draw[-latex] (C.pin 8) -- ++(-1,0) node[anchor=east] {SCK};
+\node [left,anchor=east] at (C.bpin 8) {SCL/SCK};
+
+\draw[latex-] (C.pin 9) -- ++(4,0) node [inner sep=0](GND){} -- ++(0,-0.5) node[ground] {};
+\node [right,anchor=west] at (C.bpin 9) {PS};
+
+\draw (C.pin 10) -| (GND) to[short,-*] (GND);
+\node [right,anchor=west] at (C.bpin 10) {GNDIO};
+
+\draw[latex-] (C.pin 11) -- ++(1,0) node[anchor=west] {CSB\_GYRO};
+\node [right,anchor=west] at (C.bpin 11) {CSB2};
+
+\draw (C.pin 12) -| (C.pin 10 -| GND) to[short,-*] (C.pin 10 -| GND);
+\node [right,anchor=west] at (C.bpin 12) {GNDA};
+
+\draw[latex-] (C.pin 13) -- ++(3,0) -- ++(0,0.5) -- ++(-0.25,0) -- ++(0.5,0) node[pos=0.5,anchor=south]{VDD};
+\node [right,anchor=west] at (C.bpin 13) {VDD};
+
+\draw (C.pin 14) -| (C.pin 12 -| GND) to[short,-*] (C.pin 12 -| GND);
+\node [right,anchor=west] at (C.bpin 14) {``NC''};
+
+\draw[latex-latex] (C.pin 15) -- ++(1,0) node[anchor=west] {INT2\_ACCEL};
+\node [right,anchor=west] at (C.bpin 15) {INT2};
+
+\draw[latex-latex] (C.pin 16) -- ++(1,0) node[anchor=west] {INT1\_ACCEL};
+\node [right,anchor=west] at (C.bpin 16) {INT1};
+
+\end{circuitikz}
+
+\end{document}

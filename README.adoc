@@ -2,7 +2,31 @@
 
 Footprint: DIP-16
 
-image::docs/bmi088_breakout.png[]
+image::docs/bmi088_breakout.png[width=50%]
+
+=== Connection Diagram SPI
+
+image::docs/bmi088_breakout_SPI.svg[]
+
+
+=== Connection Diagram I^2^C
+
+image::docs/bmi088_breakout_I2C.svg[]
+
+=== Hints
+
+* VDDIO range: 1.2 -- 3.6 V
+* VDD range: 2.4 -- 3.6 V
+
+* From the datasheet (pg. 34): "The interface of the gyroscope part is selected by the level of the PS pin. In contrast to this, the accelerometer part starts always in I2C mode
+(regardless of the level of the PS pin) and needs to be changed to SPI mode actively by sending
+a rising edge on the `CSB1` pin (chip select of the accelerometer), on which the accelerometer
+part switches to SPI mode and stays in this mode until the next power-up-reset.
+To change the sensor to SPI mode in the initialization phase, the user could perfom a dummy
+SPI read operation, e.g. of register `ACC_CHIP_ID` (the obtained value will be invalid)."
+
+For further details see the datasheet (https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi088-ds001.pdf)
+
 
 === Acknowledgement
 
