@@ -1,0 +1,12 @@
+"Id";"Designator";"Footprint";"Quantity";"Designation";"Supplier and ref";
+1;"mouse-bite-2mm-slot,mouse-bite-2mm-slot,mouse-bite-2mm-slot,mouse-bite-2mm-slot,mouse-bite-2mm-slot,mouse-bite-2mm-slot,mouse-bite-2mm-slot,mouse-bite-2mm-slot,mouse-bite-2mm-slot,mouse-bite-2mm-slot";"mouse-bite-2mm-slot";10;"VAL**";;;
+2;"C1,C5,C2,C3,C4,C7,C8,C6";"C_0603_1608Metric";8;"100n";;;
+3;"J3,J2,J4,J5";"castello";4;"Conn_02x08_Counter_Clockwise";;;
+4;"U5,U3,U4,U6";"PQFN50P450X300X100-16N";4;"BMI088";;;
+5;"U2";"PQFN50P450X300X100-16N";1;"BMI088";;;
+6;"R2,R1,R3";"R_0805_2012Metric";3;"4.7k";;;
+7;"C13,C14,C12,C10,C9,C11";"C_0805_2012Metric";6;"100n";;;
+8;"J1";"PinHeader_1x06_P2.54mm_Vertical";1;"Conn_01x06";;;
+9;"PMOD1";"pmod_pin_array_6x2";1;"PMOD-Device-x2-Type-1A-GPIO_1";;;
+10;"CON1";"MIKROBUS_HOST_CONN";1;"MIKROBUS_HOST_CONN_IN_GND";;;
+11;"U1";"10LGA_2X2X0p75_BOS";1;"BMP390";;;

@@ -1,0 +1,12 @@
+Comment,Designator,Footprint
+VAL**,"mouse-bite-2mm-slot,mouse-bite-2mm-slot,mouse-bite-2mm-slot,mouse-bite-2mm-slot,mouse-bite-2mm-slot,mouse-bite-2mm-slot,mouse-bite-2mm-slot,mouse-bite-2mm-slot,mouse-bite-2mm-slot,mouse-bite-2mm-slot",mouse-bite-2mm-slot
+100n,"C1,C5,C2,C3,C4,C7,C8,C6",C_0603_1608Metric
+Conn_02x08_Counter_Clockwise,"J3,J2,J4,J5",castello
+BMI088,"U5,U3,U4,U6",PQFN50P450X300X100-16N
+BMI088,U2,PQFN50P450X300X100-16N
+4.7k,"R2,R1,R3",R_0805_2012Metric
+100n,"C13,C14,C12,C10,C9,C11",C_0805_2012Metric
+Conn_01x06,J1,PinHeader_1x06_P2.54mm_Vertical
+PMOD-Device-x2-Type-1A-GPIO_1,PMOD1,pmod_pin_array_6x2
+MIKROBUS_HOST_CONN_IN_GND,CON1,MIKROBUS_HOST_CONN
+BMP390,U1,10LGA_2X2X0p75_BOS
