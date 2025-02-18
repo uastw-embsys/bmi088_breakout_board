@@ -4,10 +4,11 @@
 <svg
    version="1.1"
    id="svg2"
-   width="589.00269"
-   height="339.70132"
-   viewBox="0 0 589.00269 339.70132"
-   sodipodi:docname="bmi088_breakout_I2C.pdf"
+   width="681.33734"
+   height="358.60233"
+   viewBox="0 0 681.33735 358.60232"
+   sodipodi:docname="bmi088_breakout_I2C.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -22,12 +23,22 @@
      inkscape:showpageshadow="2"
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1" />
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="0.72751232"
+     inkscape:cx="365.62955"
+     inkscape:cy="229.54938"
+     inkscape:window-width="1670"
+     inkscape:window-height="749"
+     inkscape:window-x="162"
+     inkscape:window-y="45"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="g8" />
   <g
      id="g8"
      inkscape:groupmode="layer"
      inkscape:label="bmi088_breakout_I2C"
-     transform="matrix(1.3333333,0,0,-1.3333333,0,339.70133)">
+     transform="matrix(1.3333333,0,0,-1.3333333,92.334674,339.70364)">
     <g
        id="g10"
        transform="translate(226.771,127.388)">

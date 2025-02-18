@@ -1,8 +1,16 @@
 == DrohnFH BMI088 Breakout Board
 
-Footprint: DIP-16
+This breakout board connects all the pins of the BMI088 IMU Sensor IC
+to a DIP-16 footprint.
 
-image::docs/bmi088_breakout.png[width=50%]
+WARNING: To keep routing as simple as possible, it does *not* follow the
+conventional DIP pin assignment! Please use the connection diagrams below
+to connect the breakout board correctly.
+
+[frame="none",grid="none",cols="^.^4,^.^9,width="100%"]
+|====
+| image:docs/bmi088_breakout.png[] | image:docs/bmi088_breakout.jpg[]
+|====
 
 === Connection Diagram SPI
 
