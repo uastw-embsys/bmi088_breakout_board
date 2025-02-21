@@ -11,7 +11,8 @@
  *
  * Date: 29.1.2025
  *
- * BMI088 rudimentary bring-up code (via I2C)
+ * BMI088 rudimentary bring-up code (via I2C).
+ * Implements a complementary filter for orienation estimation.
  *
  ******************************************************************************/
  
@@ -25,6 +26,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
+#include <math.h>
 
 /* USER CODE END Includes */
 
@@ -153,6 +155,21 @@ int huart2_fgets(char *buf, int len) {
 	return (len == 0) ? -1 : 0;
 }
 
+float get_dt(void) {
+	static uint32_t last_tick = 0;
+	uint32_t current_tick = HAL_GetTick();
+	float dt = 0;
+
+	if (current_tick < last_tick) {
+		dt = ((0xffffffff-last_tick)+current_tick)/1000.0;
+	} else {
+		dt = (current_tick-last_tick)/1000.0;
+	}
+	last_tick = current_tick;
+
+	return dt;
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -161,7 +178,6 @@ int huart2_fgets(char *buf, int len) {
  */
 int main(void) {
 	/* USER CODE BEGIN 1 */
-	static char inbuf[1024];
 
 	/* USER CODE END 1 */
 
@@ -192,14 +208,27 @@ int main(void) {
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
 
-	/* identify BMI088 */
+	/* identify BMI088 by searching address space*/
 
+	int ai = 0;
+	int gi = 0;
+	int rv_acc = 1;
+	int rv_gyr = 1;
 	uint8_t acc_chip_id = 0;
-	int rv_acc = HAL_I2C_Mem_Read(&hi2c1, BMI088_ACCELEROMETER_I2C_ADDR(1),
-			BMI088_REG_ACC_CHIP_ID, BMI088_REG_ADDR_LEN, &acc_chip_id, 1, HAL_MAX_DELAY);
 	uint8_t gyr_chip_id = 0;
-	int rv_gyr = HAL_I2C_Mem_Read(&hi2c1, BMI088_GYROSCOPE_I2C_ADDR(1),
+
+	for (ai = 0; ai <= 1; ai++) {
+
+		rv_acc = HAL_I2C_Mem_Read(&hi2c1, BMI088_ACCELEROMETER_I2C_ADDR(ai),
+				BMI088_REG_ACC_CHIP_ID, BMI088_REG_ADDR_LEN, &acc_chip_id, 1, HAL_MAX_DELAY);
+		if (!rv_acc && acc_chip_id == BMI088_REG_ACC_CHIP_ID_VALUE) break;
+	}
+
+    for (gi = 0; gi <= 1; gi++) {
+	    rv_gyr = HAL_I2C_Mem_Read(&hi2c1, BMI088_GYROSCOPE_I2C_ADDR(gi),
 			BMI088_REG_GYR_CHIP_ID, BMI088_REG_ADDR_LEN, &gyr_chip_id, 1, HAL_MAX_DELAY);
+	    if (!rv_gyr && gyr_chip_id == BMI088_REG_GYR_CHIP_VALUE) break;
+    }
 
 	int gci = gyr_chip_id;
 	int aci = acc_chip_id;
@@ -225,59 +254,59 @@ int main(void) {
 	/* enable accel */
 
 	uint8_t data = BMI088_REG_ACC_PWR_CTRL_ACCELEROMETER_ON;
-	rv_acc = HAL_I2C_Mem_Write(&hi2c1, BMI088_ACCELEROMETER_I2C_ADDR(1),
+	rv_acc = HAL_I2C_Mem_Write(&hi2c1, BMI088_ACCELEROMETER_I2C_ADDR(ai),
 			BMI088_REG_ACC_PWR_CTRL, BMI088_REG_ADDR_LEN, &data, sizeof(data), HAL_MAX_DELAY);
 
 	data = ACC_RANGE;
-	rv_acc |= HAL_I2C_Mem_Write(&hi2c1, BMI088_ACCELEROMETER_I2C_ADDR(1),
+	rv_acc |= HAL_I2C_Mem_Write(&hi2c1, BMI088_ACCELEROMETER_I2C_ADDR(ai),
 			BMI088_REG_ACC_RANGE, BMI088_REG_ADDR_LEN, &data, sizeof(data), HAL_MAX_DELAY);
 
 	/* configure accel filter to normal mode and output rate to 100 Hz and LPF to normal mode */
 
 	data = BMI088_REG_ACC_CONF_BWP_NORMAL | BMI088_REG_ACC_CONF_ODR_100Hz;
-	rv_acc |= HAL_I2C_Mem_Write(&hi2c1, BMI088_ACCELEROMETER_I2C_ADDR(1),
+	rv_acc |= HAL_I2C_Mem_Write(&hi2c1, BMI088_ACCELEROMETER_I2C_ADDR(ai),
 			BMI088_REG_ACC_CONF, BMI088_REG_ADDR_LEN,  &data, sizeof(data), HAL_MAX_DELAY);
 
 	/* IO1 inactive */
 	data = 0;
-	rv_acc |= HAL_I2C_Mem_Write(&hi2c1, BMI088_ACCELEROMETER_I2C_ADDR(1),
+	rv_acc |= HAL_I2C_Mem_Write(&hi2c1, BMI088_ACCELEROMETER_I2C_ADDR(ai),
 			BMI088_REG_ACC_INT1_IO_CONF, BMI088_REG_ADDR_LEN,  &data, sizeof(data), HAL_MAX_DELAY);
 
 	/* IO2 inactive */
 	data = 0;
-	rv_acc |= HAL_I2C_Mem_Write(&hi2c1, BMI088_ACCELEROMETER_I2C_ADDR(1),
+	rv_acc |= HAL_I2C_Mem_Write(&hi2c1, BMI088_ACCELEROMETER_I2C_ADDR(ai),
 			BMI088_REG_ACC_INT2_IO_CONF, BMI088_REG_ADDR_LEN,  &data, sizeof(data), HAL_MAX_DELAY);
 
 	/* map_data */
 	data = BMI088_REG_ACC_INT1_INT2_MAP_DATA_INT1_DRDY;
-	rv_acc |= HAL_I2C_Mem_Write(&hi2c1, BMI088_ACCELEROMETER_I2C_ADDR(1),
+	rv_acc |= HAL_I2C_Mem_Write(&hi2c1, BMI088_ACCELEROMETER_I2C_ADDR(ai),
 			BMI088_REG_ACC_INT2_IO_CONF, BMI088_REG_ADDR_LEN,  &data, sizeof(data), HAL_MAX_DELAY);
 
 	/* configure gyro range to 2000 DPS */
 
 	data = BMI088_REG_GYR_GYRO_RANGE_2000DPS;
-	rv_gyr = HAL_I2C_Mem_Write(&hi2c1, BMI088_GYROSCOPE_I2C_ADDR(1),
+	rv_gyr = HAL_I2C_Mem_Write(&hi2c1, BMI088_GYROSCOPE_I2C_ADDR(gi),
 			BMI088_REG_GYR_GYRO_RANGE, BMI088_REG_ADDR_LEN,  &data, sizeof(data), HAL_MAX_DELAY);
 
 	/* configure gyro bandwidth to 1000 Hz (116 Hz filter bandwidth) */
 
 	data = BMI088_REG_GYR_GYRO_BANDWIDTH_47Hz;
-	rv_gyr |= HAL_I2C_Mem_Write(&hi2c1, BMI088_GYROSCOPE_I2C_ADDR(1),
+	rv_gyr |= HAL_I2C_Mem_Write(&hi2c1, BMI088_GYROSCOPE_I2C_ADDR(gi),
 			BMI088_REG_GYR_GYRO_BANDWIDTH, BMI088_REG_ADDR_LEN,  &data, sizeof(data), HAL_MAX_DELAY);
 
 	/* IO3 inactive */
 	data = 0;
-	rv_gyr |= HAL_I2C_Mem_Write(&hi2c1, BMI088_GYROSCOPE_I2C_ADDR(1),
+	rv_gyr |= HAL_I2C_Mem_Write(&hi2c1, BMI088_GYROSCOPE_I2C_ADDR(gi),
 			BMI088_REG_GYR_INT3_INT4_IO_CONF,  BMI088_REG_ADDR_LEN, &data, sizeof(data), HAL_MAX_DELAY);
 
 	/* IO3 map */
 	data = BMI088_REG_GYR_INT3_INT4_IO_MAP_INT3;
-	rv_gyr |= HAL_I2C_Mem_Write(&hi2c1, BMI088_GYROSCOPE_I2C_ADDR(1),
+	rv_gyr |= HAL_I2C_Mem_Write(&hi2c1, BMI088_GYROSCOPE_I2C_ADDR(gi),
 			BMI088_REG_GYR_INT3_INT4_IO_MAP, BMI088_REG_ADDR_LEN,  &data, sizeof(data), HAL_MAX_DELAY);
 
 	/* int off */
 	data = 0;
-	rv_gyr |= HAL_I2C_Mem_Write(&hi2c1, BMI088_GYROSCOPE_I2C_ADDR(1),
+	rv_gyr |= HAL_I2C_Mem_Write(&hi2c1, BMI088_GYROSCOPE_I2C_ADDR(gi),
 			BMI088_REG_GYR_INT_CTRL,  BMI088_REG_ADDR_LEN, &data, sizeof(data), HAL_MAX_DELAY);
 
 	if (rv_acc) {
@@ -289,26 +318,50 @@ int main(void) {
 		huart2_printf("I2C accelerometer could not be configured.\r\n");
 		return -1;
 	}
-
+#if 0
 	do {
 		huart2_printf("Start reading BMI088 [yN]?\r\n");
 		int rv = huart2_fgets(inbuf, 1024);
 		if (rv)
 			continue;
 	} while (strcmp(inbuf, "y\r"));
+#endif
 
 	static struct imu_measurement imu_value = { 0 };
+
+	/* vectors for sensor fusion */
+	float theta_ax;
+	float theta_ay;
+
+	float theta_gx = 0;
+	float theta_gy = 0;
+	float theta_gz = 0;
+
+	float theta_x = 0;
+	float theta_y = 0;
+	float theta_z = 0;
+
+	/* data buffer for low pass filter */
+	float _ax[4];
+	float _ay[4];
+	float _az[4];
+
+	/* parameters for sensor fusion */
+	float dt;   /* sample rate (roughly) */
+	float alpha = 0.25 /* i.e., 75% accelerometer -- 25% gyro */;
 
 	while (1) {
 
 		int16_t gyro_raw[3];
 		int16_t acc_raw[3];
 
-		int rv_gyr = HAL_I2C_Mem_Read(&hi2c1, BMI088_GYROSCOPE_I2C_ADDR(1),
+		/* get measured raw data */
+		int rv_gyr = HAL_I2C_Mem_Read(&hi2c1, BMI088_GYROSCOPE_I2C_ADDR(gi),
 				BMI088_REG_GYR_DATA0,  BMI088_REG_ADDR_LEN, (uint8_t *)(&gyro_raw), sizeof(gyro_raw), 100);
-		int rv_acc = HAL_I2C_Mem_Read(&hi2c1, BMI088_ACCELEROMETER_I2C_ADDR(1),
+		int rv_acc = HAL_I2C_Mem_Read(&hi2c1, BMI088_ACCELEROMETER_I2C_ADDR(ai),
 				BMI088_REG_ACC_DATA0,  BMI088_REG_ADDR_LEN, (uint8_t *)(&acc_raw), sizeof(acc_raw), 100);
 
+		/* scale data according to settings */
 		for (int i = 0; i < 3; i++) {
 			if (!rv_acc) {
 				imu_value.acc[i] = acc_raw[i] / 32768.0 * 1.5
@@ -319,12 +372,102 @@ int main(void) {
 			}
 		}
 
+		/* calculate if we have measurements */
 		if (!rv_acc && !rv_gyr) {
-		    huart2_printf("ACC = %5.2f %5.2f %5.2f GYR = %5.2f %5.2f %5.2f.\r\n",
-				imu_value.acc[0], imu_value.acc[1], imu_value.acc[2],
-				imu_value.gyr[0], imu_value.gyr[1], imu_value.gyr[2]);
-		}
 
+		    /* Implement sensor fusion using a complementary filter.
+		     *
+		     * This means:
+		     * (1) low-pass filter the accelerometer data
+		     * (2) high-pass filter the gyro data (not implemented)
+		     * (3) calculate the accelerometer angle via trigonometry
+		     * (4) integrate the gyro data to get the orientation estimate from the gyro
+		     * (5) weighted average of the two estimates according to alpha factor
+		     *
+		     * See https://ahrs.readthedocs.io/en/latest/filters/complementary.html */
+
+			/* get time delay of current and last measurement */
+			dt = get_dt();
+
+		    /*
+		     * (1) Implement moving average LPF for accelerometer; potential for future FIR filter
+		     */
+
+		    /* shift the buffer down */
+		    memmove(_ax+1,_ax,sizeof(_ax)-sizeof(_ax[0]));
+		    memmove(_ay+1,_ay,sizeof(_ay)-sizeof(_ay[0]));
+		    memmove(_az+1,_az,sizeof(_az)-sizeof(_az[0]));
+
+		    /* shift in the current measurment */
+		    _ax[0] = imu_value.acc[0], _ay[0] = imu_value.acc[1], _az[0] = imu_value.acc[2];
+
+		    /* calculate the dot product of the buffer and the coefficient vector
+		     * as the measurements */
+
+		    /* just use a 1/n coefficient for now (moving average) */
+		    float coeff = 1.0/((float)(sizeof(_ax))/sizeof(_ax[0]));
+
+		    float ax = 0;
+		    float ay = 0;
+		    float az = 0;
+
+		    for (int i = 0; i < sizeof(_ax)/sizeof(_ax[0]); i++) {
+		    	ax += _ax[i] * coeff;
+		    }
+		    for (int i = 0; i < sizeof(_ay)/sizeof(_ay[0]); i++) {
+		    	ay += _ay[i] * coeff;
+		    }
+		    for (int i = 0; i < sizeof(_az)/sizeof(_az[0]); i++) {
+		    	az += _az[i] * coeff;
+		    }
+
+		    /*
+		     * (2) scale the Gyro measurements from DPS to rad/s
+		     */
+		    float gx = imu_value.gyr[0]/180.0*M_PI;
+		    float gy = imu_value.gyr[1]/180.0*M_PI;
+		    float gz = imu_value.gyr[2]/180.0*M_PI;
+
+
+		    /*
+		     * (3) calculate the accelerometer angle via trigonometry
+		     */
+		    theta_ax  = atan2f(ay, az);
+		    theta_ay  = atan2f(-ax,sqrtf(ay*ay+az*az));
+
+		    /*
+		     * (4) calculate the gyroscope angle via integration of the angular velocity
+		     */
+
+		    theta_gx += gx * dt;
+		    theta_gy += gy * dt;
+		    theta_gz += gz * dt;
+
+		    /* if the drift gets too bad, reset the gyro contribution
+		     * can only do this for roll and pitch, not for yaw as we have no mag. */
+		    if (fabs(theta_gx-theta_ax) > M_PI/32) {
+		    	theta_gx = theta_ax;
+		    }
+		    if (fabs(theta_gy-theta_ay) > M_PI/32) {
+		    	theta_gy = theta_ay;
+		    }
+
+		    /*
+		     * (5) average the two measurments
+		     */
+		    theta_x = alpha * theta_gx + (1-alpha) * theta_ax;
+		    theta_y = alpha * theta_gy + (1-alpha) * theta_ay;
+		    theta_z = theta_gz;
+
+		    /* align to orientation of click shield (USB connector points backwards) */
+		    float roll = -theta_y;
+		    float pitch = theta_x;
+		    float yaw   = theta_z;
+
+		    /* output the measurments */
+		    huart2_printf("ROLL=%5.2f PITCH=%5.2f YAW=%5.2f\r\n",roll*180.0/M_PI,pitch*180.0/M_PI,yaw*180.0/M_PI);
+		    HAL_Delay(20);
+		}
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
