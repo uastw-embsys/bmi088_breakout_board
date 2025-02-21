@@ -6,6 +6,8 @@
 # Kompetenzfeld Embedded Systems
 # Fachhochschule Technikum Wien
 #
+# All rights reserved.
+#
 # Date: 29.1.2025
 # ----------------------------------------------------------------------
 
