@@ -9,9 +9,9 @@
  *
  * All rights reserved.
  *
- * Date: 29.1.2025
+ * Date: 19.3.2025
  *
- * BMI088 rudimentary bring-up code (via I2C).
+ * BMI088 rudimentary bring-up code (via SPI).
  * Implements a complementary filter for orienation estimation.
  *
  ******************************************************************************/
