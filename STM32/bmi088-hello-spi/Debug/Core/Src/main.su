@@ -1,0 +1,11 @@
+../Core/Src/main.c:136:6:huart2_printf	16	static
+../Core/Src/main.c:145:5:huart2_fgets	16	static
+../Core/Src/main.c:160:7:get_dt	16	static
+../Core/Src/main.c:184:5:bmi088_spi_write	24	static
+../Core/Src/main.c:197:5:bmi088_spi_read	40	static
+../Core/Src/main.c:222:5:main	248	static
+../Core/Src/main.c:518:6:SystemClock_Config	96	static
+../Core/Src/main.c:569:13:MX_SPI1_Init	8	static
+../Core/Src/main.c:609:13:MX_USART2_UART_Init	8	static
+../Core/Src/main.c:644:13:MX_GPIO_Init	40	static
+../Core/Src/main.c:684:6:Error_Handler	4	static,ignoring_inline_asm

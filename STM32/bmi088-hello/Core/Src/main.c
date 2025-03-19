@@ -76,6 +76,8 @@ struct imu_measurement {
 #define BMI088_REG_ACC_RANGE_24G                    0x03
 #define BMI088_REG_ACC_PWR_CTRL                     0x7D
 #define BMI088_REG_ACC_PWR_CTRL_ACCELEROMETER_ON    0x04
+#define BMI088_REG_ACC_PWR_CONF                     0x7C
+#define BMI088_REG_ACC_PWR_CONF_ACTIVE_MODE         0x00
 #define BMI088_REG_ACC_INT1_IO_CONF                 0x53
 #define BMI088_REG_ACC_INT1_IO_CONF_INPUT           (1<<4)
 #define BMI088_REG_ACC_INT1_IO_CONF_OUTPUT          (1<<3)
@@ -217,6 +219,8 @@ int main(void) {
 	uint8_t acc_chip_id = 0;
 	uint8_t gyr_chip_id = 0;
 
+	HAL_Delay(1); // Datasheet PG 13
+
 	for (ai = 0; ai <= 1; ai++) {
 
 		rv_acc = HAL_I2C_Mem_Read(&hi2c1, BMI088_ACCELEROMETER_I2C_ADDR(ai),
@@ -256,6 +260,12 @@ int main(void) {
 	uint8_t data = BMI088_REG_ACC_PWR_CTRL_ACCELEROMETER_ON;
 	rv_acc = HAL_I2C_Mem_Write(&hi2c1, BMI088_ACCELEROMETER_I2C_ADDR(ai),
 			BMI088_REG_ACC_PWR_CTRL, BMI088_REG_ADDR_LEN, &data, sizeof(data), HAL_MAX_DELAY);
+
+	HAL_Delay(50); // Datasheet PG 13
+
+	data = BMI088_REG_ACC_PWR_CONF_ACTIVE_MODE;
+	rv_acc = HAL_I2C_Mem_Write(&hi2c1, BMI088_ACCELEROMETER_I2C_ADDR(ai),
+			BMI088_REG_ACC_PWR_CONF, BMI088_REG_ADDR_LEN, &data, sizeof(data), HAL_MAX_DELAY);
 
 	data = ACC_RANGE;
 	rv_acc |= HAL_I2C_Mem_Write(&hi2c1, BMI088_ACCELEROMETER_I2C_ADDR(ai),

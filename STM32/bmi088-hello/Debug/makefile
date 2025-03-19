@@ -60,8 +60,8 @@ all: main-build
 main-build: bmi088-hello.elf secondary-outputs
 
 # Tool invocations
-bmi088-hello.elf bmi088-hello.map: $(OBJS) $(USER_OBJS) /home/fibich/git/drohnfh/i2c-scanner/bmi088-hello/STM32L432KCUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "bmi088-hello.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/fibich/git/drohnfh/i2c-scanner/bmi088-hello/STM32L432KCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="bmi088-hello.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
+bmi088-hello.elf bmi088-hello.map: $(OBJS) $(USER_OBJS) /home/fibich/git/drohnfh/bmi088_breakout_board/STM32/bmi088-hello/STM32L432KCUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "bmi088-hello.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/fibich/git/drohnfh/bmi088_breakout_board/STM32/bmi088-hello/STM32L432KCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="bmi088-hello.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
