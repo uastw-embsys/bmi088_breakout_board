@@ -12,6 +12,11 @@ to connect the breakout board correctly.
 | image:docs/bmi088_breakout.png[] | image:docs/bmi088_breakout.jpg[]
 |====
 
+=== Revision 2
+
+Revision 2 adds silkscreen markings for the individual pins.
+It is electrically otherwise unchanged.
+
 === Connection Diagram SPI
 
 image::docs/bmi088_breakout_SPI.svg[]
