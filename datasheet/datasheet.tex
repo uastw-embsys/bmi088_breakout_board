@@ -1,0 +1,93 @@
+\documentclass[a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[scaled]{helvet}
+\usepackage[margin=2cm]{geometry}
+\usepackage{tikz}
+\usepackage{circuitikz}
+\usepackage{standalone}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{multirow}
+
+\renewcommand{\familydefault}{\sfdefault}
+\begin{document}
+\pagestyle{empty}
+\begin{tikzpicture}
+    \draw[] (0,1) -- (16,1) -- (16,25.7) -- (0,25.7) -- (0,1);
+    \draw (0,25.7) node[anchor=north west](dfh){\includegraphics[height=2cm]{img/drohnfh.pdf}};
+    \draw (16,25.7) node[anchor=north east](tw){\includegraphics[height=2cm]{img/twlogo.pdf}};
+    \draw[draw=none] (dfh.north east) -- (tw.north west) node[pos=0.5, anchor=north](ma23){\includegraphics[height=2cm]{img/ma23.png}};
+    \draw (0,23.4) -- (16,23.4);
+    
+    \draw (0,23) node[anchor=north west, align=left]{{\bfseries\huge Bosch Sensortec BMI088 Breakout Board}\\[1em]{\bfseries\Large 6-Axis Inertial Measurement Unit (IMU) Module}};
+    
+    \draw (0,21) node[anchor=north west, align=left]{{\bfseries\Large General Description}\\[1em]
+                                                     {This module contains a 6-axis inertial measurement unit (IMU) that can be accessed via SPI or I\textsuperscript{2}C.}\\
+                                                     {The IMU provides a 3-axis gyroscope and a 3-axis accelerometer.}};
+    \draw (0.15,19) -- (15.85,19);
+    
+    \draw (0,18) node[anchor=north west](SPI){\includestandalone[mode=buildnew, height=4cm]{img/bmi088_SPI}};
+    \draw (0,12.5) node[anchor=north west](I2C){\includestandalone[mode=buildnew, height=4cm]{img/bmi088_I2C}};
+    
+    \draw (SPI.north) node[anchor=south,inner sep=0.2cm]{\large\bfseries Connection Diagram (SPI)};
+    \draw (I2C.north) node[anchor=south,inner sep=0.2cm]{\large\bfseries Connection Diagram (I\textsuperscript{2}C)};
+    
+    \draw (SPI.north east) ++(0.2,0.9) -- ++(0,-5.2);
+    \draw (SPI.north east) ++(0.2,-4.6) -- ++(0,-5.2);
+    
+    \draw (0.15,13.5) -- (15.85,13.5);
+    \draw (0.15,8) -- (15.85,8);
+    \draw (0.15,4.25) -- (15.85,4.25);
+    \draw (0.15,3.25) -- (15.85,3.25);
+    
+    \draw (8.5,19.0) node[anchor=north west,align=left]{\scriptsize Write: First Byte is \{MSB=0, 7-bit Register Address\}\\
+                                                          \scriptsize Read: First Byte is \{MSB=1, 7-bit Register Address\}\\
+                                                          \scriptsize Supports SPI speeds up to 10~MHz.\\[1em]
+                                                       };
+    
+    
+    \draw (8.5,13.5) node[anchor=north west,align=left]{\scriptsize 7-bit Accelerometer I\textsuperscript{2}C Address (SDO1=0): 0011000\textsubscript{B} = 18\textsubscript{H}\\
+                                                          \scriptsize 7-bit Accelerometer I\textsuperscript{2}C Address (SDO1=1): 0011001\textsubscript{B} = 19\textsubscript{H}\\
+                                                        \scriptsize 7-bit Gyroscope I\textsuperscript{2}C Address (SDO2=0): 1101000\textsubscript{B} = 68\textsubscript{H}\\
+                                                          \scriptsize 7-bit Gyroscope I\textsuperscript{2}C Address (SDO2=1): 1101001\textsubscript{B} = 69\textsubscript{H}\\
+                                                          \scriptsize Supports I\textsuperscript{2}C speeds up to 400~kHz.\\[1em]};
+    
+    \draw (0,8) node[anchor=north west,align=left]{
+    \large\bfseries Electrical Characteristics\\[0.5em]
+    
+    \begin{tabular}{|l|l|c|c|c|c|}
+        \hline
+        \rowcolor{gray!50} Parameter & Conditions & MIN & TYP & MAX & UNITS \\
+        \hline
+        \multicolumn{6}{|c|}{Supply Voltages}\\
+        \hline
+        VDD       &            & 2.4 &  & 3.6 & V \\
+        \hline
+        VDDIO     &            & 1.2 &  & 3.6 & V \\
+        \hline
+        \multicolumn{6}{|c|}{Supply Currents}\\
+        \hline
+        \multirow{2}{*}{Total Supply Current} & Normal Mode, 3.0~V & & 0.15 & & mA \\
+        \cline{2-6}
+                                              & Suspended Mode, 3.0~V  & & 3 & & µA \\
+        \hline
+    \end{tabular}
+    \\[0.5em]
+    
+    \large\bfseries Further Details\\[0.25em]
+    For further details, please consult the datasheet for the Bosch Sensortec BMI088 IMU.\\[0.5em]
+    
+    \large\bfseries Acknowledgment\\
+    \scriptsize This work was supported by the City of Vienna via the project ``Stadt Wien Kompetenzteam für Drohnentechnik in der Fachhochschulausbildung''\\[-0.25em]
+    \scriptsize (MA23 Projekt Nr. 35-02)\\[0.5em]
+    
+    
+    Version: 1.0 (2026-06-12)
+    };
+    
+\end{tikzpicture}
+
+
+
+
+\end{document}
