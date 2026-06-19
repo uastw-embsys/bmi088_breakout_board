@@ -3,28 +3,27 @@
 This breakout board connects all the pins of the BMI088 IMU Sensor IC
 to a DIP-16 footprint.
 
-WARNING: To keep routing as simple as possible, it does *not* follow the
-conventional DIP pin assignment! Please use the connection diagrams below
-to connect the breakout board correctly.
-
 [frame="none",grid="none",cols="^.^4,^.^9,width="100%"]
 |====
 | image:docs/bmi088_breakout.png[] | image:docs/bmi088_breakout.jpg[]
 |====
+
+WARNING: To keep routing as simple as possible, it does *not* follow the
+conventional DIP pin assignment! Please use the connection diagrams below
+to connect the breakout board correctly.
+
+The breakout board's pin assignment can be found in its link:datasheet/datasheet.pdf[Datasheet].
+
+It is pin-compatible with the link:https://github.com/uastw-embsys/icm42688_breakout_board[ICM42688 Breakout Board] for both SPI and I2C.
+
+For further details see the sensor's datasheet (https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi088-ds001.pdf)
+
 
 === Revision 2
 
 Revision 2 adds silkscreen markings for the individual pins.
 It is electrically otherwise unchanged.
 
-=== Connection Diagram SPI
-
-image::docs/bmi088_breakout_SPI.svg[]
-
-
-=== Connection Diagram I^2^C
-
-image::docs/bmi088_breakout_I2C.svg[]
 
 === Hints
 
